@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Closest Sum Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        input[type="number"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+            color: white;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #69db7c 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(81, 207, 102, 0.4);
+        }
+
+        .numbers-display {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 100px;
+        }
+
+        .numbers-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .number-tag {
+            display: inline-flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 8px 15px;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .number-value {
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .target-section {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .result-section {
+            background: #f1f8e9;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #4caf50;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .result-numbers {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #c8e6c9;
+            font-weight: 500;
+            color: #1b5e20;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #f44336;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            input[type="number"], .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Closest Sum Calculator</h1>
+            <p>Add numbers and find the combination that gets closest to your target sum</p>
+        </div>
+        
+        <div class="content">
+            <!-- Add Numbers Section -->
+            <div class="input-section">
+                <div class="input-group">
+                    <input type="number" id="numberInput" placeholder="Enter a number" step="any">
+                    <button class="btn btn-primary" onclick="addNumber()">Add Number</button>
+                </div>
+            </div>
+
+            <!-- Numbers Display -->
+            <div class="numbers-display">
+                <div class="numbers-title">Your Numbers:</div>
+                <div id="numbersList">
+                    <div class="empty-state">No numbers added yet. Add some numbers above!</div>
+                </div>
+            </div>
+
+            <!-- Target Section -->
+            <div class="target-section">
+                <div class="input-group">
+                    <input type="number" id="targetInput" placeholder="Enter target sum" step="any">
+                    <button class="btn btn-success" onclick="findClosestSum()">Find Closest Sum</button>
+                </div>
+            </div>
+
+            <!-- Error Display -->
+            <div id="errorDisplay" style="display: none;"></div>
+
+            <!-- Results Section -->
+            <div id="resultSection" style="display: none;" class="result-section">
+                <div class="result-title">Result:</div>
+                <div class="result-item">
+                    <strong>Numbers to add:</strong>
+                    <div id="resultNumbers" class="result-numbers"></div>
+                </div>
+                <div class="result-item">
+                    <strong>Sum:</strong> <span id="resultSum"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Target:</strong> <span id="resultTarget"></span>
+                </div>
+                <div class="result-item">
+                    <strong>Difference:</strong> <span id="resultDifference"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let numbers = [];
+
+        function addNumber() {
+            const input = document.getElementById('numberInput');
+            const value = parseFloat(input.value);
+            
+            if (isNaN(value)) {
+                showError('Please enter a valid number');
+                return;
+            }
+            
+            numbers.push(value);
+            input.value = '';
+            updateNumbersDisplay();
+            hideError();
+        }
+
+        function removeNumber(index) {
+            numbers.splice(index, 1);
+            updateNumbersDisplay();
+        }
+
+        function updateNumbersDisplay() {
+            const container = document.getElementById('numbersList');
+            
+            if (numbers.length === 0) {
+                container.innerHTML = '<div class="empty-state">No numbers added yet. Add some numbers above!</div>';
+                return;
+            }
+            
+            container.innerHTML = numbers.map((num, index) => `
+                <div class="number-tag">
+                    <span class="number-value">${num}</span>
+                    <button class="btn btn-danger" onclick="removeNumber(${index})" title="Remove">×</button>
+                </div>
+            `).join('');
+        }
+
+        function findClosestSum() {
+            const targetInput = document.getElementById('targetInput');
+            const target = parseFloat(targetInput.value);
+            
+            if (isNaN(target)) {
+                showError('Please enter a valid target number');
+                return;
+            }
+            
+            if (numbers.length === 0) {
+                showError('Please add some numbers first');
+                return;
+            }
+            
+            hideError();
+            
+            const result = findClosestSumCombination(numbers, target);
+            displayResult(result, target);
+        }
+
+        function findClosestSumCombination(numbers, target) {
+            let bestCombination = [];
+            let bestSum = 0;
+            let minDifference = Infinity;
+            
+            // Generate all possible combinations
+            const totalCombinations = Math.pow(2, numbers.length);
+            
+            for (let i = 1; i < totalCombinations; i++) {
+                const combination = [];
+                let sum = 0;
+                
+                for (let j = 0; j < numbers.length; j++) {
+                    if (i & (1 << j)) {
+                        combination.push(numbers[j]);
+                        sum += numbers[j];
+                    }
+                }
+                
+                const difference = Math.abs(sum - target);
+                
+                if (difference < minDifference) {
+                    minDifference = difference;
+                    bestCombination = combination;
+                    bestSum = sum;
+                }
+            }
+            
+            return {
+                combination: bestCombination,
+                sum: bestSum,
+                difference: minDifference
+            };
+        }
+
+        function displayResult(result, target) {
+            document.getElementById('resultNumbers').textContent = result.combination.join(' + ');
+            document.getElementById('resultSum').textContent = result.sum;
+            document.getElementById('resultTarget').textContent = target;
+            document.getElementById('resultDifference').textContent = result.difference;
+            document.getElementById('resultSection').style.display = 'block';
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('errorDisplay');
+            errorDiv.innerHTML = `<div class="error">${message}</div>`;
+            errorDiv.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorDisplay').style.display = 'none';
+        }
+
+        // Allow Enter key to add numbers
+        document.getElementById('numberInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addNumber();
+            }
+        });
+
+        // Allow Enter key to find closest sum
+        document.getElementById('targetInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                findClosestSum();
+            }
+        });
+    </script>
+</body>
+</html>
